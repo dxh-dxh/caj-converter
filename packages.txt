@@ -1,1 +1,3 @@
+git
 poppler-utils
+libgl1
