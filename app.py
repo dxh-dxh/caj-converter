@@ -6,7 +6,7 @@ import os
 # 动态安装依赖函数
 def install_dependencies():
     try:
-        # 使用 pip 强制安装 caj2pdf，且不处理依赖（依赖由环境决定）
+        # 使用 pip 强制安装 caj2pdf
         subprocess.check_call([sys.executable, "-m", "pip", "install", "git+https://github.com/flyfoxs/caj2pdf.git"])
     except Exception as e:
         st.error(f"依赖安装失败: {e}")
@@ -19,6 +19,7 @@ if not os.path.exists("installed_marker"):
             f.write("installed")
 
 st.title("CAJ 转 PDF 转换器")
+st.write("上传您的 CAJ 文件，点击下方按钮开始转换。")
 
 uploaded_file = st.file_uploader("选择 CAJ 文件", type=['caj'])
 
@@ -31,8 +32,8 @@ if uploaded_file is not None:
     
     if st.button("开始转换"):
         try:
-            # 执行转换
-            subprocess.run(['caj2pdf', 'convert', temp_input, '-o', output_file], check=True)
+            # 关键修改：使用 sys.executable -m 模式运行，确保能找到命令
+            subprocess.run([sys.executable, "-m", "caj2pdf", "convert", temp_input, "-o", output_file], check=True)
             
             with open(output_file, "rb") as file:
                 st.download_button(
